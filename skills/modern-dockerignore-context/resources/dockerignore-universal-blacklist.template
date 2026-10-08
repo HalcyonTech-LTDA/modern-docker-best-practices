@@ -1,0 +1,93 @@
+# =============================================================================
+# Enterprise Universal .dockerignore: Blacklist Pattern
+# Purpose: Comprehensive safety checklist for repositories where whitelisting
+#          is impractical. Excludes secrets, caches, VCS, and IDE metadata.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 1. Version Control & CI/CD Pipelines
+# -----------------------------------------------------------------------------
+.git/
+.gitignore
+.gitattributes
+.github/
+.gitlab/
+.circleci/
+.travis.yml
+
+# -----------------------------------------------------------------------------
+# 2. Sensitive Credentials & Secrets (ZERO LEAKAGE POLICY)
+# -----------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.pfx
+*.p12
+*id_rsa*
+*id_ed25519*
+.aws/
+.azure/
+.kube/
+.docker/
+.npmrc
+.pypirc
+.netrc
+
+# -----------------------------------------------------------------------------
+# 3. Local Dependencies & Package Manager Stores
+# -----------------------------------------------------------------------------
+node_modules/
+.pnpm-store/
+.yarn/
+vendor/
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+
+# -----------------------------------------------------------------------------
+# 4. Build Artifacts, Compilations & Intermediate Caches
+# -----------------------------------------------------------------------------
+dist/
+build/
+out/
+target/
+bin/
+obj/
+.gradle/
+.turbo/
+.next/
+.nuxt/
+.parcel-cache/
+.cache/
+*.class
+*.jar
+*.war
+
+# -----------------------------------------------------------------------------
+# 5. IDE, Editor & Operating System Artifacts
+# -----------------------------------------------------------------------------
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+.AppleDouble
+Thumbs.db
+ehthumbs.db
+
+# -----------------------------------------------------------------------------
+# 6. Test Reports, Coverage & Logs
+# -----------------------------------------------------------------------------
+coverage/
+.nyc_output/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*

@@ -1,0 +1,41 @@
+# =============================================================================
+# Production Hardened .dockerignore: Whitelist (Allowlist) Pattern
+# Behavior: Excludes everything across the repository by default, then
+#           selectively negates only the exact paths required for the build.
+# =============================================================================
+
+# 1. Ignore everything recursively
+**
+
+# 2. Re-include project configuration and build manifests
+!package.json
+!package-lock.json
+!pnpm-lock.yaml
+!yarn.lock
+!tsconfig.json
+!go.mod
+!go.sum
+!pyproject.toml
+!uv.lock
+!poetry.lock
+!gradlew
+!gradlew.bat
+!gradle/**
+!build.gradle.kts
+!settings.gradle.kts
+!pom.xml
+
+# 3. Re-include source code and static assets
+!src/**
+!public/**
+!cmd/**
+!internal/**
+!pkg/**
+
+# 4. Safeguard: Re-exclude sensitive patterns even if placed inside source directories
+**/.DS_Store
+**/*.log
+**/.env*
+**/*.pem
+**/*.key
+**/*id_rsa*

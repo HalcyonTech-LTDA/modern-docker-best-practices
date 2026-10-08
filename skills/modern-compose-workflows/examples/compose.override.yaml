@@ -1,0 +1,53 @@
+# =============================================================================
+# Developer Local Override (compose.override.yaml)
+# Purpose: Automatically merged with compose.yaml on developer machines.
+#          Adds Compose Watch, enables hot reloading, exposes debug ports.
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # Database Local Inspection Port
+  # ---------------------------------------------------------------------------
+  database:
+    ports:
+      - "127.0.0.1:5432:5432" # Bound strictly to 127.0.0.1 (never 0.0.0.0)
+
+  # ---------------------------------------------------------------------------
+  # Cache Local Inspection Port
+  # ---------------------------------------------------------------------------
+  cache:
+    ports:
+      - "127.0.0.1:6379:6379"
+
+  # ---------------------------------------------------------------------------
+  # API Local Development & Compose Watch
+  # ---------------------------------------------------------------------------
+  api:
+    build:
+      target: dev # Target development stage with hot reloader
+    read_only: false # Permitted for local development write buffers
+    ports:
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:5005:5005" # Remote debugging port
+    environment:
+      LOG_LEVEL: debug
+      DEBUG: "true"
+    develop:
+      watch:
+        # Rebuild container image when dependencies or build manifests change
+        - action: rebuild
+          path: ./package.json
+
+        # Live sync static assets directly into container
+        - action: sync
+          path: ./public
+          target: /app/public
+
+        # Sync and restart backend processes on source code updates
+        - action: sync+restart
+          path: ./src
+          target: /app/src
+          ignore:
+            - node_modules/
+            - "*.log"
+            - .git/

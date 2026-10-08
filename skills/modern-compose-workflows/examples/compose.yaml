@@ -1,0 +1,142 @@
+# =============================================================================
+# Production Hardened Docker Compose Specification (compose.yaml)
+# Standards: Versionless spec, explicit name, healthcheck choreography,
+#            internal network isolation, non-root, read-only root, stop grace period
+# =============================================================================
+
+name: enterprise-cloud-platform
+
+services:
+  # ---------------------------------------------------------------------------
+  # 1. Backing Datastore: PostgreSQL (Isolated & Protected)
+  # ---------------------------------------------------------------------------
+  database:
+    image: postgres:16.4-alpine3.20
+    restart: unless-stopped
+    stop_grace_period: 30s
+    environment:
+      POSTGRES_DB: ${DB_NAME:-appdb}
+      POSTGRES_USER: ${DB_USER:-appuser}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - data_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 1024M
+
+  # ---------------------------------------------------------------------------
+  # 2. Backing Cache: Redis (In-Memory Datastore)
+  # ---------------------------------------------------------------------------
+  cache:
+    image: redis:7.4-alpine3.20
+    restart: unless-stopped
+    stop_grace_period: 15s
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:-changeme}"]
+    volumes:
+      - redis_data:/data
+    networks:
+      - data_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+
+  # ---------------------------------------------------------------------------
+  # 3. One-Off Task: Database Schema Migration
+  # ---------------------------------------------------------------------------
+  migrator:
+    image: migrate/migrate:v4.18.2
+    restart: "no"
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - data_net
+    secrets:
+      - db_password
+    command: ["-path=/migrations", "-database=postgres://${DB_USER:-appuser}@database:5432/${DB_NAME:-appdb}?sslmode=disable", "up"]
+
+  # ---------------------------------------------------------------------------
+  # 4. Backend Application API
+  # ---------------------------------------------------------------------------
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    stop_grace_period: 20s
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+      - /run:rw,noexec,nosuid,size=16m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    environment:
+      PORT: 8080
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-appdb}
+      DB_USER: ${DB_USER:-appuser}
+      REDIS_HOST: cache
+      REDIS_PORT: 6379
+    secrets:
+      - db_password
+    networks:
+      - data_net
+      - public_net
+    ports:
+      - "127.0.0.1:8080:8080" # Bound strictly to loopback interface
+    depends_on:
+      database:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+      migrator:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "/app/healthcheck"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 1024M
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  public_net:
+    driver: bridge
+  data_net:
+    driver: bridge
+    internal: true # Cut off completely from public internet ingress and egress
