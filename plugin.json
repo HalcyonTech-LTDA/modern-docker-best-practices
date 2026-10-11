@@ -1,5 +1,5 @@
 {
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
   "name": "modern-docker-best-practices",
-  "description": "Professional modern Docker best practices covering secure and optimized Dockerfile engineering (BuildKit, multi-stage builds, non-root users, cache/secret mounts), modern Compose Spec orchestration (compose.yaml / docker-compose.yaml, healthcheck choreography, network segmentation, Compose Watch), and lean build context filtering with .dockerignore whitelisting.",
-  "version": "1.0.0"
+  "description": "Professional modern Docker best practices covering secure and optimized Dockerfile engineering (BuildKit, multi-stage builds, non-root users, cache/secret mounts), modern Compose Spec orchestration (compose.yaml / docker-compose.yaml, healthcheck choreography, network segmentation, Compose Watch), and lean build context filtering with .dockerignore whitelisting."
 }
