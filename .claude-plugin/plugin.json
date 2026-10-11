@@ -1,0 +1,14 @@
+{
+  "name": "modern-docker-best-practices",
+  "description": "Professional modern Docker best practices covering secure and optimized Dockerfile engineering (BuildKit, multi-stage builds, non-root users, cache/secret mounts), modern Compose Spec orchestration (compose.yaml / docker-compose.yaml, healthcheck choreography, network segmentation, Compose Watch), and lean build context filtering with .dockerignore whitelisting.",
+  "author": {
+    "name": "Halcyon Tech",
+    "url": "https://github.com/HalcyonTech-LTDA"
+  },
+  "homepage": "https://github.com/HalcyonTech-LTDA/modern-docker-best-practices",
+  "repository": "https://github.com/HalcyonTech-LTDA/modern-docker-best-practices",
+  "license": "MIT",
+  "skills": [
+    "./claude/skills/"
+  ]
+}
