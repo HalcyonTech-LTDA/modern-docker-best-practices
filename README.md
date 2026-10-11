@@ -31,7 +31,7 @@ Modern container engineering demands speed, minimal attack surfaces, supply-chai
 
 ## What's Included
 
-### 1. Automatic Guardrails (`rules/AGENTS.md`)
+### 1. Automatic Guardrails (`rules/modern-docker-engineering.md`)
 Automatically enforced across all Docker projects:
 - **Versionless Compose Specification**: Absolute ban on obsolete `version: '3.8'` headers; explicit project `name:`.
 - **Production Non-Root Requirement**: Mandating unprivileged users (`USER nonroot:nonroot` or `USER 10001:10001`).
@@ -90,7 +90,7 @@ modern-docker-best-practices/
 ├── plugin.json
 ├── README.md
 ├── rules/
-│   └── AGENTS.md
+│   └── modern-docker-engineering.md
 └── skills/
     ├── modern-dockerfile-craftsmanship/
     │   ├── SKILL.md
