@@ -1,5 +1,20 @@
 {
   "$schema": "https://antigravity.google/schemas/v1/plugin.json",
   "name": "modern-docker-best-practices",
-  "description": "Professional modern Docker best practices covering secure and optimized Dockerfile engineering (BuildKit, multi-stage builds, non-root users, cache/secret mounts), modern Compose Spec orchestration (compose.yaml / docker-compose.yaml, healthcheck choreography, network segmentation, Compose Watch), and lean build context filtering with .dockerignore whitelisting."
+  "description": "Professional modern Docker best practices covering secure and optimized Dockerfile engineering (BuildKit, multi-stage builds, non-root users, cache/secret mounts), modern Compose Spec orchestration (compose.yaml / docker-compose.yaml, healthcheck choreography, network segmentation, Compose Watch), and lean build context filtering with .dockerignore whitelisting.",
+  "displayName": "Modern Docker Best Practices",
+  "version": "1.0.0",
+  "author": {
+    "name": "Halcyon Tech",
+    "url": "https://github.com/HalcyonTech-LTDA"
+  },
+  "homepage": "https://github.com/HalcyonTech-LTDA/modern-docker-best-practices",
+  "repository": "https://github.com/HalcyonTech-LTDA/modern-docker-best-practices",
+  "license": "MIT",
+  "logo": "assets/logo.svg",
+  "suggestedPrompts": [
+    "Optimize this Dockerfile for multi-stage builds, caching, and minimal footprint",
+    "Audit container security, non-root user execution, and vulnerability scanning",
+    "Generate production-grade Docker Compose configurations with healthchecks"
+  ]
 }
